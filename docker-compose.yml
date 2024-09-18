@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  php-apache:
+    build: .
+    container_name: php56
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /mnt/dados/var/www/html:/var/www/html
+      - ./apache2/sites-available:/etc/apache2/sites-available
+      - ./apache2/certs:/etc/ssl/certs
+      - ./apache2/certs:/etc/ssl/private
+      - ./apache2/hosts:/etc/hosts
+      - ./php:/usr/local/etc/php
+      - ./php/conf.d:/usr/local/etc/php/conf.d
+    environment:
+      - APACHE_RUN_DIR=/var/run/apache2
+      - APACHE_LOCK_DIR=/var/lock/apache2
+      - APACHE_LOG_DIR=/var/log/apache2
+      - APACHE_PID_FILE=/var/run/apache2/apache2.pid
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - XDEBUG_CONFIG="remote_host=172.16.232.240"
+      - PHP_IDE_CONFIG="serverName=web"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
